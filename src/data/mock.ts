@@ -1,4 +1,6 @@
-export const mockUploads = [
+import { Metrics, TrainingRun, Upload } from "../types/training";
+
+export const mockUploads: Upload[] = [
   {
     id: "flux-char-001",
     name: "Neon Courier",
@@ -25,7 +27,7 @@ export const mockUploads = [
   }
 ];
 
-export const mockTrainingRuns = [
+export const mockTrainingRuns: TrainingRun[] = [
   {
     id: "run-neo-27",
     title: "Flux1.dev • Cinematic fashion",
@@ -48,7 +50,7 @@ export const mockTrainingRuns = [
   }
 ];
 
-export const mockMetrics = {
+export const mockMetrics: Metrics = {
   losses: [0.34, 0.29, 0.22, 0.18, 0.15, 0.14, 0.12],
   captionsPerMinute: [18, 24, 33, 47, 49, 58, 61],
   datasetGrowth: [320, 420, 588, 802, 920, 1105, 1314]

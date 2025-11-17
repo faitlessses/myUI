@@ -1,48 +1,11 @@
 import { create } from "zustand";
 import { mockUploads, mockTrainingRuns, mockMetrics } from "../data/mock";
-
-type UploadStatus = "queued" | "processing" | "captioned" | "error";
-
-type Upload = {
-  id: string;
-  name: string;
-  type: "image" | "video";
-  status: UploadStatus;
-  variants: number;
-  qualityScore: number;
-  description?: string;
-};
-
-type TrainingRun = {
-  id: string;
-  title: string;
-  progress: number;
-  eta: string;
-  loss: number;
-  lr: number;
-  checkpoints: number;
-  status: "training" | "scheduling" | "complete";
-};
-
-type Metrics = {
-  losses: number[];
-  captionsPerMinute: number[];
-  datasetGrowth: number[];
-};
-
-interface TrainingState {
-  uploads: Upload[];
-  trainingRuns: TrainingRun[];
-  metrics: Metrics;
-  selectedModel: "flux1.dev" | "wan2.2";
-  autoCaptioning: boolean;
-  datasetCohesion: number;
-  addUpload: (upload: Upload) => void;
-  toggleAutoCaptioning: () => void;
-  updateTrainingProgress: (runId: string, progress: number) => void;
-  updateMetrics: (metrics: Partial<Metrics>) => void;
-  setSelectedModel: (model: "flux1.dev" | "wan2.2") => void;
-}
+import {
+  Metrics,
+  TrainingRun,
+  TrainingState,
+  Upload
+} from "../types/training";
 
 export const useTrainingStore = create<TrainingState>()((set) => ({
   uploads: mockUploads,
