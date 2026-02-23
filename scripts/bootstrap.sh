@@ -30,7 +30,11 @@ fi
 if [[ -f runtime/engines/kohya_ss/requirements.txt ]]; then
   (
     cd runtime/engines/kohya_ss
-    pip install -r requirements.txt
+    git submodule update --init --recursive || true
+    # Some kohya revisions include editable ./sd-scripts entries that fail
+    # when submodule layout differs. Strip only that line for robust bootstrap.
+    grep -vE '^-e[[:space:]]+\./sd-scripts$' requirements.txt > requirements.codex.txt || cp requirements.txt requirements.codex.txt
+    pip install -r requirements.codex.txt
   ) || true
 fi
 
