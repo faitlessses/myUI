@@ -21,11 +21,17 @@ if [[ ! -d runtime/engines/kohya_ss ]]; then
 fi
 
 if [[ -f runtime/engines/ai-toolkit/requirements.txt ]]; then
-  pip install -r runtime/engines/ai-toolkit/requirements.txt || true
+  (
+    cd runtime/engines/ai-toolkit
+    pip install -r requirements.txt
+  ) || true
 fi
 
 if [[ -f runtime/engines/kohya_ss/requirements.txt ]]; then
-  pip install -r runtime/engines/kohya_ss/requirements.txt || true
+  (
+    cd runtime/engines/kohya_ss
+    pip install -r requirements.txt
+  ) || true
 fi
 
 npm install
