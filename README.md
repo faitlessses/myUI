@@ -1,40 +1,59 @@
-# Flux & Wan LoRA Forge
+# Vast LoRA Trainer Platform
 
-Ultramodern control center UI for orchestrating full-cycle LoRA training tailored to Flux1.dev carton generators and Wan2.2 cinematic diffusion. Inspired by [ostris/ai-toolkit](https://github.com/ostris/ai-toolkit) but redesigned as a neon cockpit for dataset ingest, auto-captioning, experiment management, and deployment visualization.
+Production-ready single-container web UI for LoRA training on Vast.ai with switchable engines:
+- `ai-toolkit`
+- `kohya_ss`
 
-## Features
+## What Works
 
-- **Dataset Forge** – upload assets, auto-balance modality ratios, and monitor quality cohesion.
-- **Auto Description Lab** – generate narrative captions, prompt genomes, and Lumi Co-Pilot gap analysis.
-- **Model Playground** – flip between Flux1.dev and Wan2.2 focus modes with adaptive hyperparameter hints.
-- **Training Conductor** – visualize progress, losses, learning rates, and checkpoint cadence in real time.
-- **Pipeline Timeline** – follow ingest → describe → train → deploy milestones with status highlights.
-- **Innovation Hub** – signature extras like Persona Blend Engine, Audience Pulse, and Metric Hologram overlays.
+- Create jobs from web form
+- Start/stop training process
+- Live log tail
+- Artifact discovery + download
+- SQLite persistence for jobs
+- Frontend served by FastAPI in one container
 
-## Getting Started
+## Vast.ai Quick Start (Linux)
 
+```bash
+git clone <your-repo-url> lora-platform
+cd lora-platform
+chmod +x scripts/bootstrap.sh scripts/start.sh
+./scripts/bootstrap.sh
+PORT=8000 ./scripts/start.sh
+```
+
+Expose port `8000` in Vast template/network settings, then open:
+
+`http://<vast-instance-ip>:8000`
+
+## Dev Mode (split frontend/backend)
+
+Terminal 1:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn backend.app:app --reload --host 0.0.0.0 --port 8000
+```
+
+Terminal 2:
 ```bash
 npm install
 npm run dev
 ```
 
-Open the provided local URL to explore the interface.
+Open `http://localhost:5173`.
 
-## Tech Stack
+## Engine Notes
 
-- [Vite](https://vitejs.dev/) + [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- [Tailwind CSS](https://tailwindcss.com/) for the ultramodern neon aesthetic
-- [Framer Motion](https://www.framer.com/motion/) for smooth micro-interactions
-- [Zustand](https://github.com/pmndrs/zustand) for lightweight state management
+- `ai-toolkit`: install/clone toolkit under `runtime/engines/ai-toolkit` or set `AI_TOOLKIT_DIR`.
+- `kohya_ss`: clone under `runtime/engines/kohya_ss` or set `KOHYA_DIR`.
+- If repos are missing, jobs still create but start may fail with command errors visible in logs.
 
-## Project Structure
+## Test + Build
 
+```bash
+pytest -q
+npm run build
 ```
-src/
-  components/      # UI modules for each training surface
-  data/            # Mock data used to simulate runtime telemetry
-  hooks/           # Global state store
-  styles/          # Tailwind entry point and global theming
-```
-
-> This is a conceptual experience layer—hook up your own backend endpoints to connect real Flux & Wan training loops.
