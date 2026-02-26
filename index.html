@@ -1,67 +1,126 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prompt Preset Studio</title>
+    <meta name="description" content="Локальный менеджер пресетов для prompt engineering." />
+    <title>Prompt Preset Studio Pro</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>
-      <h1>Prompt Preset Studio</h1>
-      <p>Build, save, and copy prompt presets for image/video generation services.</p>
+    <header class="topbar">
+      <div>
+        <h1>Prompt Preset Studio Pro</h1>
+        <p>Локальный Web UI для продвинутой сборки и хранения prompt-пресетов.</p>
+      </div>
+      <div class="topbar-actions">
+        <button id="theme-btn" class="secondary" type="button">🌙 Тема</button>
+        <button id="clear-storage-btn" class="danger" type="button">Очистить всё</button>
+      </div>
     </header>
 
     <main>
       <section class="panel controls">
-        <h2>Preset Editor</h2>
+        <h2>Редактор пресета</h2>
         <form id="preset-form">
-          <label>
-            Preset name
-            <input id="name" required placeholder="e.g. Cinematic Night Scene" />
-          </label>
+          <div class="grid-2">
+            <label>
+              Название
+              <input id="name" required placeholder="Например: Neon Alley NSFW" />
+            </label>
+            <label>
+              Категория
+              <select id="category">
+                <option>General</option>
+                <option>Photo Realistic</option>
+                <option>Anime</option>
+                <option>Video</option>
+                <option>Roleplay</option>
+                <option>Cinematic</option>
+              </select>
+            </label>
+          </div>
 
           <label>
-            Category
-            <select id="category">
-              <option>General</option>
-              <option>Photo Realistic</option>
-              <option>Anime</option>
-              <option>Video</option>
-              <option>Roleplay</option>
-            </select>
+            Теги (через запятую)
+            <input id="tags" placeholder="e.g. nsfw, lighting, pov, 4k" />
           </label>
 
           <label>
             Positive prompt
-            <textarea id="positive" rows="5" required placeholder="Describe what you want..."></textarea>
+            <textarea id="positive" rows="5" required placeholder="Что именно нужно сгенерировать..."></textarea>
           </label>
 
           <label>
             Negative prompt
-            <textarea id="negative" rows="3" placeholder="Things to avoid..."></textarea>
+            <textarea id="negative" rows="3" placeholder="Что исключить из генерации..."></textarea>
           </label>
 
+          <div class="grid-3">
+            <label>
+              Model
+              <input id="model" placeholder="e.g. Flux / SDXL / Wan2.1" />
+            </label>
+            <label>
+              Aspect ratio
+              <select id="aspect">
+                <option value="">Auto</option>
+                <option>1:1</option>
+                <option>2:3</option>
+                <option>3:2</option>
+                <option>9:16</option>
+                <option>16:9</option>
+                <option>21:9</option>
+              </select>
+            </label>
+            <label>
+              Seed
+              <input id="seed" type="number" min="0" placeholder="Опционально" />
+            </label>
+          </div>
+
+          <div class="grid-3">
+            <label>
+              Steps
+              <input id="steps" type="number" min="1" max="150" value="30" />
+            </label>
+            <label>
+              CFG
+              <input id="cfg" type="number" min="1" max="30" step="0.5" value="7" />
+            </label>
+            <label>
+              Sampler
+              <input id="sampler" placeholder="e.g. DPM++ 2M Karras" />
+            </label>
+          </div>
+
           <label>
-            Notes (optional)
-            <textarea id="notes" rows="2" placeholder="Model tips, seed ideas, camera setup..."></textarea>
+            Notes
+            <textarea id="notes" rows="2" placeholder="Подсказки, workflow, ограничения сервиса..."></textarea>
           </label>
 
           <div class="row">
-            <button type="submit" id="save-btn">Save preset</button>
-            <button type="button" id="reset-btn" class="secondary">Clear</button>
+            <button type="submit" id="save-btn">Сохранить пресет</button>
+            <button type="button" id="duplicate-btn" class="secondary">Дублировать</button>
+            <button type="button" id="reset-btn" class="secondary">Очистить</button>
           </div>
         </form>
       </section>
 
       <section class="panel library">
         <div class="library-head">
-          <h2>Preset Library</h2>
-          <input id="search" placeholder="Search presets..." />
+          <h2>Библиотека</h2>
+          <input id="search" placeholder="Поиск по имени, тегам, prompt..." />
         </div>
 
-        <div class="row">
-          <button id="export-btn" class="secondary">Export JSON</button>
+        <div class="row compact">
+          <select id="sort-by">
+            <option value="updated">Сначала новые</option>
+            <option value="name">По имени</option>
+            <option value="category">По категории</option>
+            <option value="favorite">Избранные сверху</option>
+          </select>
+          <button id="export-btn" class="secondary" type="button">Export JSON</button>
           <label class="import-label secondary">
             Import JSON
             <input type="file" id="import-file" accept="application/json" />
@@ -72,28 +131,43 @@
       </section>
 
       <section class="panel output">
-        <h2>Prompt Output</h2>
+        <h2>Финальный prompt</h2>
+
+        <div class="row compact">
+          <label class="inline-check"><input id="include-negative" type="checkbox" checked /> Negative</label>
+          <label class="inline-check"><input id="include-params" type="checkbox" checked /> Params</label>
+          <label class="inline-check"><input id="include-notes" type="checkbox" /> Notes</label>
+        </div>
+
         <label>
           Combined prompt
-          <textarea id="combined" rows="10" readonly></textarea>
+          <textarea id="combined" rows="13" readonly></textarea>
         </label>
+
         <div class="row">
-          <button id="copy-btn">Copy prompt</button>
+          <button id="copy-btn" type="button">Скопировать prompt</button>
+          <button id="copy-json-btn" type="button" class="secondary">Скопировать JSON</button>
           <span id="status" aria-live="polite"></span>
         </div>
+
+        <p class="hint">Горячие клавиши: <code>Ctrl/Cmd + S</code> сохранить, <code>Ctrl/Cmd + K</code> поиск, <code>Ctrl/Cmd + Shift + C</code> копировать.</p>
       </section>
     </main>
 
     <template id="preset-item-template">
       <li class="preset-item">
-        <div>
-          <strong class="title"></strong>
+        <div class="preset-main">
+          <div class="preset-title-row">
+            <button class="favorite secondary" title="Toggle favorite" type="button">☆</button>
+            <strong class="title"></strong>
+          </div>
           <p class="meta"></p>
+          <p class="tags"></p>
           <p class="snippet"></p>
         </div>
         <div class="row">
-          <button class="load">Load</button>
-          <button class="delete danger">Delete</button>
+          <button class="load" type="button">Load</button>
+          <button class="delete danger" type="button">Delete</button>
         </div>
       </li>
     </template>
