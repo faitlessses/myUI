@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prompt Preset Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Prompt Preset Studio</h1>
+      <p>Build, save, and copy prompt presets for image/video generation services.</p>
+    </header>
+
+    <main>
+      <section class="panel controls">
+        <h2>Preset Editor</h2>
+        <form id="preset-form">
+          <label>
+            Preset name
+            <input id="name" required placeholder="e.g. Cinematic Night Scene" />
+          </label>
+
+          <label>
+            Category
+            <select id="category">
+              <option>General</option>
+              <option>Photo Realistic</option>
+              <option>Anime</option>
+              <option>Video</option>
+              <option>Roleplay</option>
+            </select>
+          </label>
+
+          <label>
+            Positive prompt
+            <textarea id="positive" rows="5" required placeholder="Describe what you want..."></textarea>
+          </label>
+
+          <label>
+            Negative prompt
+            <textarea id="negative" rows="3" placeholder="Things to avoid..."></textarea>
+          </label>
+
+          <label>
+            Notes (optional)
+            <textarea id="notes" rows="2" placeholder="Model tips, seed ideas, camera setup..."></textarea>
+          </label>
+
+          <div class="row">
+            <button type="submit" id="save-btn">Save preset</button>
+            <button type="button" id="reset-btn" class="secondary">Clear</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel library">
+        <div class="library-head">
+          <h2>Preset Library</h2>
+          <input id="search" placeholder="Search presets..." />
+        </div>
+
+        <div class="row">
+          <button id="export-btn" class="secondary">Export JSON</button>
+          <label class="import-label secondary">
+            Import JSON
+            <input type="file" id="import-file" accept="application/json" />
+          </label>
+        </div>
+
+        <ul id="preset-list"></ul>
+      </section>
+
+      <section class="panel output">
+        <h2>Prompt Output</h2>
+        <label>
+          Combined prompt
+          <textarea id="combined" rows="10" readonly></textarea>
+        </label>
+        <div class="row">
+          <button id="copy-btn">Copy prompt</button>
+          <span id="status" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+
+    <template id="preset-item-template">
+      <li class="preset-item">
+        <div>
+          <strong class="title"></strong>
+          <p class="meta"></p>
+          <p class="snippet"></p>
+        </div>
+        <div class="row">
+          <button class="load">Load</button>
+          <button class="delete danger">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
